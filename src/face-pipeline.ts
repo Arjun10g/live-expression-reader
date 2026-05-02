@@ -36,27 +36,31 @@ export async function createFacePipeline(): Promise<FacePipeline> {
   const modelAssetPath =
     import.meta.env.VITE_MEDIAPIPE_MODEL_URL ?? DEFAULT_MODEL_URL;
 
-  // Try GPU first (WebGL delegate). Some Android Chromes and stricter mobile
-  // browsers fail GPU silently or partially -- catch and fall back to CPU.
-  // On laptops with WebGL this never triggers; the desktop path is unchanged.
+  // Pick the delegate based on the platform. On mobile Android Chrome the
+  // WebGL/GPU delegate frequently *succeeds* at construction but then returns
+  // zero detections silently -- a known MediaPipe issue tracked across
+  // multiple github threads. CPU delegate is reliable on mobile WASM.
+  // Laptops keep the GPU delegate as before; desktop path is unchanged.
+  const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  const preferredDelegate: "GPU" | "CPU" = isMobile ? "CPU" : "GPU";
+  const buildLandmarker = (delegate: "GPU" | "CPU"): Promise<FaceLandmarker> =>
+    FaceLandmarker.createFromOptions(filesetResolver, {
+      baseOptions: { modelAssetPath, delegate },
+      runningMode: "VIDEO",
+      numFaces: 5,
+      outputFaceBlendshapes: true,
+      outputFacialTransformationMatrixes: false,
+    });
   let landmarker: FaceLandmarker;
   try {
-    landmarker = await FaceLandmarker.createFromOptions(filesetResolver, {
-      baseOptions: { modelAssetPath, delegate: "GPU" },
-      runningMode: "VIDEO",
-      numFaces: 5,
-      outputFaceBlendshapes: true,
-      outputFacialTransformationMatrixes: false,
-    });
+    landmarker = await buildLandmarker(preferredDelegate);
   } catch (err) {
-    console.warn("FaceLandmarker GPU delegate unavailable, falling back to CPU:", err);
-    landmarker = await FaceLandmarker.createFromOptions(filesetResolver, {
-      baseOptions: { modelAssetPath, delegate: "CPU" },
-      runningMode: "VIDEO",
-      numFaces: 5,
-      outputFaceBlendshapes: true,
-      outputFacialTransformationMatrixes: false,
-    });
+    const fallback = preferredDelegate === "GPU" ? "CPU" : "GPU";
+    console.warn(
+      `FaceLandmarker ${preferredDelegate} delegate failed, falling back to ${fallback}:`,
+      err,
+    );
+    landmarker = await buildLandmarker(fallback);
   }
 
   return {
