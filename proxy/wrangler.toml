@@ -1,0 +1,12 @@
+name = "expression-explain-proxy"
+main = "src/worker.ts"
+compatibility_date = "2024-10-01"
+
+# Comma-separated allowed Origins. localhost for dev, the .hf.space URL for prod.
+[vars]
+ALLOWED_ORIGIN = "https://arjun10g-live-expression-reader.static.hf.space,http://localhost:5173,http://127.0.0.1:5173"
+
+# Set the secret (one-time):
+#   wrangler secret put ANTHROPIC_API_KEY
+# Then in the Cloudflare dashboard, add a rate-limit rule for this Worker:
+#   - 30 requests / 5 minutes per IP, action: block 5m
