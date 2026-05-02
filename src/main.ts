@@ -1,6 +1,5 @@
-// Render-loop entry point. Per CLAUDE.md: this is the only place
-// requestAnimationFrame is called; everything else is pure functions
-// over feature data.
+// Render-loop entry point. This is the only place requestAnimationFrame is
+// called; everything else is pure functions over feature data.
 
 import { createFacePipeline, type FacePipeline, type FaceFeatures } from "./face-pipeline";
 import { createEmotionClassifier, type EmotionClassifier } from "./emotion-onnx";
@@ -249,8 +248,7 @@ function toDisplay(r: EmotionReadout): DisplayReadout {
   return { top: ranked, valence: r.valence, arousal: r.arousal, ambiguous };
 }
 
-// Map top-1 confidence to bbox stroke alpha. Per CLAUDE.md 6a: bright at
-// 90%+, translucent at 40%.
+// Map top-1 confidence to bbox stroke alpha: bright at 90%+, translucent at 40%.
 function confidenceAlpha(prob: number): number {
   const t = Math.max(0, Math.min(1, (prob - 0.4) / 0.5));
   return 0.3 + 0.65 * t;

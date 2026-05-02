@@ -1,6 +1,6 @@
 // Emotion type definitions. The actual classifier lives in emotion-onnx.ts
 // (HSEmotion enet_b0_8_va_mtl). This file used to host a hand-tuned blendshape
-// head; it was retired once Architecture B was adopted -- see CLAUDE.md.
+// head; it was retired once the HSEmotion ONNX classifier was adopted.
 
 export const EMOTIONS = [
   "neutral",

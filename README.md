@@ -119,10 +119,6 @@ The Space serves at `https://<your-username>-<space-name>.static.hf.space`.
 - **Calm** (low arousal Russell quadrant) + **affect lability** (V-flux): Russell 1980 (*JPSP* 39(6)); Kuppens et al. 2010, 2013 (*Emotion*).
 - **Compound emotions** (bittersweet, fearfully surprised, etc.): Du, Tao & Martinez 2014 (*PNAS* 111(15) E1454).
 
-## Project status
-
-See [STATUS.md](./STATUS.md) for an end-to-end breakdown of what's been built, the architecture decisions, and what's planned. See [CLAUDE.md](./CLAUDE.md) for project working agreements.
-
 ## License
 
 Apache-2.0. The HSEmotion weights are also Apache-2.0; MediaPipe is Apache-2.0; onnxruntime-web is MIT. No GPL/CC-BY-NC dependencies anywhere in the stack.

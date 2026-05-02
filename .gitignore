@@ -9,3 +9,4 @@ models/
 proxy/.wrangler/
 proxy/.dev.vars
 hf-space/
+.claude/

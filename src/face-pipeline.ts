@@ -4,7 +4,7 @@
 // We use VIDEO running mode rather than LIVE_STREAM. Both work for a webcam,
 // but VIDEO returns results synchronously, which fits our rAF-driven loop in
 // main.ts and keeps the rest of the pipeline as pure functions over feature
-// data (per CLAUDE.md). Swap to LIVE_STREAM only if profiling shows the
+// data. Swap to LIVE_STREAM only if profiling shows the
 // detect call is stalling frames.
 
 import {
