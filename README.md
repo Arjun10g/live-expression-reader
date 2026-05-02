@@ -13,13 +13,16 @@ short_description: Calibrated in-browser facial expression reader
 
 Real-time facial-expression analysis with **calibrated confidence**, **literature-grounded cognitive states** (tired / focused / bored / stressed / engaged / confused / calm), and **AI-powered explanations** grounded in the Facial Action Coding System. Runs entirely in your browser — webcam frames never leave your device.
 
-[![Live demo](https://img.shields.io/badge/Live%20demo-arjun10g--live--expression--reader-indigo?style=for-the-badge)](https://arjun10g-live-expression-reader.static.hf.space)
-[![Source on Hugging Face](https://img.shields.io/badge/Source-Hugging%20Face%20Spaces-orange?style=for-the-badge&logo=huggingface)](https://huggingface.co/spaces/arjun10g/live-expression-reader/tree/main)
+[![Live demo](https://img.shields.io/badge/Live%20demo-Open-indigo?style=for-the-badge&logo=huggingface&logoColor=white)](https://arjun10g-live-expression-reader.static.hf.space)
+[![GitHub](https://img.shields.io/badge/GitHub-Arjun10g%2Flive--expression--reader-181717?style=for-the-badge&logo=github)](https://github.com/Arjun10g/live-expression-reader)
+[![HF Space](https://img.shields.io/badge/Mirror-HF%20Spaces-orange?style=for-the-badge&logo=huggingface&logoColor=white)](https://huggingface.co/spaces/arjun10g/live-expression-reader/tree/main)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-green?style=for-the-badge)](https://www.apache.org/licenses/LICENSE-2.0)
 
 > **Live demo:** <https://arjun10g-live-expression-reader.static.hf.space>
 >
-> **Source:** <https://huggingface.co/spaces/arjun10g/live-expression-reader/tree/main>
+> **Source on GitHub:** <https://github.com/Arjun10g/live-expression-reader>
+>
+> **Mirror on Hugging Face Spaces:** <https://huggingface.co/spaces/arjun10g/live-expression-reader/tree/main>
 
 ---
 
