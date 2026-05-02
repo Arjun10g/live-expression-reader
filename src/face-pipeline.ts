@@ -36,16 +36,28 @@ export async function createFacePipeline(): Promise<FacePipeline> {
   const modelAssetPath =
     import.meta.env.VITE_MEDIAPIPE_MODEL_URL ?? DEFAULT_MODEL_URL;
 
-  const landmarker = await FaceLandmarker.createFromOptions(filesetResolver, {
-    baseOptions: {
-      modelAssetPath,
-      delegate: "GPU",
-    },
-    runningMode: "VIDEO",
-    numFaces: 5,
-    outputFaceBlendshapes: true,
-    outputFacialTransformationMatrixes: false,
-  });
+  // Try GPU first (WebGL delegate). Some Android Chromes and stricter mobile
+  // browsers fail GPU silently or partially -- catch and fall back to CPU.
+  // On laptops with WebGL this never triggers; the desktop path is unchanged.
+  let landmarker: FaceLandmarker;
+  try {
+    landmarker = await FaceLandmarker.createFromOptions(filesetResolver, {
+      baseOptions: { modelAssetPath, delegate: "GPU" },
+      runningMode: "VIDEO",
+      numFaces: 5,
+      outputFaceBlendshapes: true,
+      outputFacialTransformationMatrixes: false,
+    });
+  } catch (err) {
+    console.warn("FaceLandmarker GPU delegate unavailable, falling back to CPU:", err);
+    landmarker = await FaceLandmarker.createFromOptions(filesetResolver, {
+      baseOptions: { modelAssetPath, delegate: "CPU" },
+      runningMode: "VIDEO",
+      numFaces: 5,
+      outputFaceBlendshapes: true,
+      outputFacialTransformationMatrixes: false,
+    });
+  }
 
   return {
     process(video, timestampMs) {

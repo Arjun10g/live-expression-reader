@@ -48,6 +48,7 @@ const TARGET_WIDTH = 1280;
 const TARGET_HEIGHT = 720;
 
 interface Refs {
+  videoContainer: HTMLElement;
   video: HTMLVideoElement;
   canvas: HTMLCanvasElement;
   ctx: CanvasRenderingContext2D;
@@ -85,6 +86,7 @@ interface Refs {
 }
 
 function getRefs(): Refs {
+  const videoContainer = document.getElementById("video-container");
   const video = document.getElementById("webcam");
   const canvas = document.getElementById("overlay");
   const pauseBtn = document.getElementById("pause");
@@ -119,6 +121,7 @@ function getRefs(): Refs {
   const helpClose = document.getElementById("help-close");
   const helpCloseBottom = document.getElementById("help-close-bottom");
   if (
+    !videoContainer ||
     !(video instanceof HTMLVideoElement) ||
     !(canvas instanceof HTMLCanvasElement) ||
     !(pauseBtn instanceof HTMLButtonElement) ||
@@ -158,6 +161,7 @@ function getRefs(): Refs {
   const ctx = canvas.getContext("2d");
   if (!ctx) throw new Error("2d context unavailable");
   return {
+    videoContainer,
     video, canvas, ctx, pauseBtn, explainBtn, recalibrateBtn, exportBtn, explanation,
     recordBtn, recordDot, recordLabel,
     chatForm, chatInput, chatSend, summarizeSession, discussRecording,
@@ -202,7 +206,10 @@ function hidePersonalCalib(refs: Refs): void {
   refs.personalCalibOverlay.classList.remove("flex");
 }
 
-async function startWebcam(video: HTMLVideoElement): Promise<MediaStream> {
+async function startWebcam(
+  video: HTMLVideoElement,
+  container: HTMLElement,
+): Promise<MediaStream> {
   const stream = await navigator.mediaDevices.getUserMedia({
     audio: false,
     video: {
@@ -220,6 +227,18 @@ async function startWebcam(video: HTMLVideoElement): Promise<MediaStream> {
     }
     video.addEventListener("loadeddata", () => resolve(), { once: true });
   });
+  // Match container's aspect ratio to the actual stream so phone portrait
+  // cameras (e.g. 720x1280) fill the box instead of being cropped or
+  // letterboxed inside a forced 16:9 container. On laptops the webcam is
+  // already 16:9 so this is a no-op for the desktop layout.
+  const applyAspect = (): void => {
+    if (video.videoWidth > 0 && video.videoHeight > 0) {
+      container.style.aspectRatio = `${video.videoWidth} / ${video.videoHeight}`;
+    }
+  };
+  applyAspect();
+  video.addEventListener("loadedmetadata", applyAspect);
+  window.addEventListener("orientationchange", applyAspect);
   return stream;
 }
 
@@ -948,7 +967,7 @@ async function main(): Promise<void> {
     showLoading(refs, "Loading models (~26MB)…");
     try {
       const [s, p, c] = await Promise.all([
-        startWebcam(refs.video),
+        startWebcam(refs.video, refs.videoContainer),
         createFacePipeline(),
         createEmotionClassifier(),
       ]);

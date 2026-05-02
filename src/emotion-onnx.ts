@@ -58,9 +58,14 @@ export async function createEmotionClassifier(): Promise<EmotionClassifier> {
   const inputName = session.inputNames[0];
   if (!inputName) throw new Error("HSEmotion ONNX has no input");
 
-  const crop = new OffscreenCanvas(INPUT_SIZE, INPUT_SIZE);
+  // Plain HTMLCanvasElement (off-DOM) instead of OffscreenCanvas: works on
+  // every browser including iOS Safari pre-16.4. Same perf for our use case
+  // since we never transfer the canvas to a worker.
+  const crop = document.createElement("canvas");
+  crop.width = INPUT_SIZE;
+  crop.height = INPUT_SIZE;
   const cropCtx = crop.getContext("2d", { willReadFrequently: true });
-  if (!cropCtx) throw new Error("OffscreenCanvas 2d context unavailable");
+  if (!cropCtx) throw new Error("canvas 2d context unavailable");
 
   return {
     async classify(video, bbox) {
