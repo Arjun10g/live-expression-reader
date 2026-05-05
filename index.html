@@ -28,6 +28,9 @@
         background: rgb(23, 23, 23);
         color: rgb(229, 229, 229);
       }
+      /* When AI proxy isn't configured, hide every AI-related affordance.
+         Toggle via body.no-ai class set in main.ts at startup. */
+      body.no-ai .ai-feature { display: none !important; }
     </style>
   </head>
   <body
@@ -158,7 +161,7 @@
           </button>
           <button
             id="explain"
-            class="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-sm font-medium transition-colors"
+            class="ai-feature px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-sm font-medium transition-colors"
           >
             Why?
           </button>
@@ -191,7 +194,7 @@
             <span id="record-label">Record</span>
           </button>
         </div>
-        <div class="flex items-center gap-2 ml-auto">
+        <div class="ai-feature flex items-center gap-2 ml-auto">
           <label
             for="window-slider"
             class="text-xs text-neutral-400 select-none"
@@ -215,7 +218,7 @@
         </div>
       </section>
 
-      <section class="mt-6">
+      <section class="ai-feature mt-6">
         <h2
           class="text-xs font-semibold uppercase tracking-[0.18em] text-neutral-500 mb-2 px-1"
         >
@@ -449,7 +452,7 @@
               </ul>
             </section>
 
-            <section>
+            <section class="ai-feature">
               <h3 class="font-semibold text-neutral-100 mb-1.5">
                 3. Ask the AI
               </h3>
@@ -481,9 +484,9 @@
               <ul class="space-y-1.5 text-neutral-300">
                 <li>
                   <kbd>Record</kbd> — captures a clip of session data (max
-                  10 minutes). After stopping, click
-                  <kbd>Discuss recording</kbd> to have the AI analyze the
-                  whole clip.
+                  10 minutes).<span class="ai-feature">
+                  After stopping, click <kbd>Discuss recording</kbd> to have
+                  the AI analyze the whole clip.</span>
                 </li>
                 <li>
                   <kbd>Export</kbd> — downloads the session timeline as a JSON
@@ -532,10 +535,10 @@
             >
               <h3 class="font-semibold text-emerald-200 mb-1">Privacy</h3>
               <p class="text-emerald-100/90 text-xs leading-relaxed">
-                Webcam frames stay on this device. Only numerical features
+                Webcam frames stay on this device. <span class="ai-feature">Only numerical features
                 (blendshapes, calibrated probabilities, valence / arousal)
                 are sent to the AI, and only when you click Why? / Ask /
-                Summarize. Personal templates and saved recordings live only
+                Summarize. </span>Personal templates and saved recordings live only
                 in this browser tab; the storage opt-in is off by default.
               </p>
             </section>

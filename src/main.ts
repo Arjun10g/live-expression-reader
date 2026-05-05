@@ -584,7 +584,22 @@ function showError(refs: Refs, message: string): void {
 
 async function main(): Promise<void> {
   const refs = getRefs();
-  refs.explanation.textContent = "Click “Start” to enable your webcam. Frames stay on this device.";
+
+  // AI features (Why? / Ask / Summarize / Discuss recording) require either a
+  // server-side proxy URL (production) or an embedded dev key (local only).
+  // Without either, hide every AI-related affordance via body.no-ai → CSS.
+  // The rest of the app — calibration, states, recording, export, personal
+  // templates — works unchanged.
+  const aiEnabled =
+    !!import.meta.env.VITE_EXPLAIN_PROXY_URL ||
+    !!import.meta.env.VITE_DEMO_ANTHROPIC_API_KEY;
+  if (!aiEnabled) {
+    document.body.classList.add("no-ai");
+  }
+
+  refs.explanation.textContent = aiEnabled
+    ? "Click “Start” to enable your webcam. Frames stay on this device."
+    : "";
   refs.pauseBtn.textContent = "Start";
 
   let paused = false;
